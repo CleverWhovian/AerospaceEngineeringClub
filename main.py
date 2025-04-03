@@ -14,6 +14,13 @@ import os
 #     print("")
 #     time.sleep(0.5)
 
+def initFileStructure():
+    if (not os.path.exists('~/video')):
+        print("Making video directory")
+        os.popen("mkdir video")
+    print("video directory already exists")
+
+
 def main():
     
     IMUSuccess = False
@@ -47,16 +54,19 @@ def main():
     if altimeterSuccess == True:
         altimeter.sealevel_pressure = 103040
 
+    # create video directory and start recording video
+    initFileStructure()
     files = os.popen("cd video; ls").read()
     print(type(files))
     for i in range (0,10):
         if ("vid" + str(i)) in files:
             pass
         else:
-            filename = "vid" + str(i)  + ".h294"
+            filename = "vid" + str(i)  + ".h264"
             break
     
-    subprocess.Popen("libcamera-vid --width 1280 --height 780 --timeout 6000 -o vide/" + filename, shell=True)
+    
+    subprocess.Popen("libcamera-vid --width 1280 --height 780 --timeout 6000 -o video/" + filename, shell=True)
 
     epoch = time.time()
 
