@@ -56,7 +56,7 @@ def main():
             filename = "vid" + str(i)  + ".h294"
             break
     
-    subprocess.Popen("libcamera-vid --width 1280 --height 780 --timeout 6000 -o " + filename, shell=True)
+    subprocess.Popen("libcamera-vid --width 1280 --height 780 --timeout 6000 -o vide/" + filename, shell=True)
 
     epoch = time.time()
 
