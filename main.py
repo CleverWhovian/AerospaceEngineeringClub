@@ -22,6 +22,7 @@ def main():
     for i in range(0,10):
         if initDone:
             break
+
         i2c = board.I2C()
         if IMUSuccess == False:
             try:
@@ -31,6 +32,7 @@ def main():
             except Exception as e:
                 print("Failed to initialize IMU")
                 print(e)
+        
         if altimeterSuccess == False:
             try:
                 altimeter = adafruit_mpl3115a2.MPL3115A2(i2c)
@@ -39,28 +41,32 @@ def main():
             except Exception as e:
                 print("Failed to initialize Altimeter")
                 print(e)
-    
+
+
     altimeter.sealevel_pressure = 103040
+
 
 
     epoch = time.time()
 
     #Loop through everything and collect data
     while True:
-        with open("data.csv", 'a') as csvFile:
-            try:
-                IMUData = "IMU, " + str(time.time()-epoch) + ", " + str(IMU.acceleration[0]) + ", " + str(IMU.acceleration[1]) + ", " + str(IMU.acceleration[2]) + ", " + str(IMU.gyro[0]) + ", " + str(IMU.gyro[1]) + ", " + str(IMU.gyro[2]) + '\n'
-                csvFile.write(IMUData)
-            except Exception as e:
-                print("Failed to write IMU Data: ")
-                #print(e)
-        with open("data.csv", 'a') as csvFile:
-            try:
-                altimeterData = "Altimeter, " + str(altimeter.pressure) + ", " + str(altimeter.altitude) + '\n'
-                csvFile.write(altimeterData)
-            except:
-                print("Failed to write altimeter data")
-                
+        if IMUSuccess:
+            with open("data.csv", 'a') as csvFile:
+                try:
+                    IMUData = "IMU, " + str(time.time()-epoch) + ", " + str(IMU.acceleration[0]) + ", " + str(IMU.acceleration[1]) + ", " + str(IMU.acceleration[2]) + ", " + str(IMU.gyro[0]) + ", " + str(IMU.gyro[1]) + ", " + str(IMU.gyro[2]) + '\n'
+                    csvFile.write(IMUData)
+                except Exception as e:
+                    print("Failed to write IMU Data: ")
+                    #print(e)
+        if altimeterSuccess:
+            with open("data.csv", 'a') as csvFile:
+                try:
+                    altimeterData = "Altimeter, " + str(altimeter.pressure) + ", " + str(altimeter.altitude) + '\n'
+                    csvFile.write(altimeterData)
+                except:
+                    print("Failed to write altimeter data")
+                    
 
 main()
 
